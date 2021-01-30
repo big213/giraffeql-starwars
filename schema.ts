@@ -1,13 +1,6 @@
 // Query builder
 const queryResult = executeJomql({
   // Start typing here to get hints
-  getDroid: {
-    id: true,
-    name: true,
-    __args: {
-      id: "2001",
-    },
-  },
 });
 
 export function executeJomql<Key extends keyof Root>(
@@ -97,5 +90,6 @@ type Queryize<T> = T extends Field<infer Type, infer Args>
   getHuman: { Type: Human; Args: InputType["getHuman"] };
   getHeroByEpisode: { Type: Droid; Args: InputType["getHeroByEpisode"] };
   getEpisodes: { Type: Scalars["episode"][]; Args: undefined };
+  getSum: { Type: Scalars["number"]; Args: Scalars["number"][] };
   getBar: { Type: Scalars["string"][]; Args: undefined };
 };

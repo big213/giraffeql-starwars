@@ -5,6 +5,7 @@ import {
   JomqlRootResolverType,
   JomqlInputFieldType,
   JomqlInputType,
+  inputTypeDefs,
 } from "jomql";
 import getDroid from "../data/getDroid";
 import { droid, human } from "./typeDefs";
@@ -96,6 +97,25 @@ export default {
       return Object.keys(episodeEnum)
         .filter((key) => !Number.isNaN(parseInt(key)))
         .map((key) => parseInt(key));
+    },
+  }),
+  getSum: new JomqlRootResolverType({
+    name: "getSum",
+    type: Scalars.number,
+    allowNull: false,
+    isArray: false,
+    method: "get",
+    route: "/getSum",
+    query: {},
+    args: new JomqlInputFieldType({
+      required: true,
+      isArray: true,
+      type: Scalars.number,
+    }),
+    resolver({ args }) {
+      return args.reduce((total: number, ele: number) => {
+        return total + ele;
+      }, 0);
     },
   }),
   getBar: new JomqlRootResolverType({
