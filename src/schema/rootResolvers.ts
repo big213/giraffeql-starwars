@@ -18,12 +18,14 @@ export default {
     type: droid,
     allowNull: false,
     isArray: false,
-    method: "get",
-    route: "/droid/:id",
-    query: {
-      id: lookupSymbol,
-      name: lookupSymbol,
-      foo: lookupSymbol,
+    restOptions: {
+      method: "get",
+      route: "/droid/:id",
+      query: {
+        id: lookupSymbol,
+        name: lookupSymbol,
+        foo: lookupSymbol,
+      },
     },
     resolver(input) {
       return getDroid(input.args.id);
@@ -43,11 +45,13 @@ export default {
     type: human,
     allowNull: false,
     isArray: false,
-    method: "get",
-    route: "/human/:id",
-    query: {
-      id: lookupSymbol,
-      name: lookupSymbol,
+    restOptions: {
+      method: "get",
+      route: "/human/:id",
+      query: {
+        id: lookupSymbol,
+        name: lookupSymbol,
+      },
     },
     resolver(input) {
       return getHuman(input.args.id);
@@ -68,8 +72,14 @@ export default {
     type: droid,
     allowNull: false,
     isArray: false,
-    method: "get",
-    route: "/heroByEpisode",
+    restOptions: {
+      method: "get",
+      route: "/heroByEpisode/:episode",
+      query: {
+        id: lookupSymbol,
+        name: lookupSymbol,
+      },
+    },
     args: new JomqlInputFieldType({
       required: true,
       type: new JomqlInputType({
@@ -91,8 +101,11 @@ export default {
     type: Scalars.episode,
     allowNull: false,
     isArray: true,
-    method: "get",
-    route: "/episodes",
+    restOptions: {
+      method: "get",
+      route: "/episodes",
+      query: lookupSymbol,
+    },
     resolver() {
       return Object.keys(episodeEnum)
         .filter((key) => !Number.isNaN(parseInt(key)))
@@ -104,9 +117,15 @@ export default {
     type: Scalars.number,
     allowNull: false,
     isArray: false,
-    method: "get",
-    route: "/getSum",
-    query: {},
+    restOptions: {
+      method: "get",
+      route: "/getSum",
+      query: lookupSymbol,
+      argsTransformer: (req) => {
+        const values = <Array<string>>req.query.values;
+        return Array.isArray(values) ? values.map((ele) => Number(ele)) : [];
+      },
+    },
     args: new JomqlInputFieldType({
       required: true,
       isArray: true,
@@ -123,11 +142,45 @@ export default {
     type: Scalars.string,
     allowNull: false,
     isArray: true,
-    method: "get",
-    route: "/bar/:id",
-    query: {},
+    restOptions: {
+      method: "get",
+      route: "/bar/:id",
+      query: lookupSymbol,
+    },
+    args: new JomqlInputFieldType({
+      required: false,
+      type: new JomqlInputType({
+        name: "getBar",
+        fields: {
+          id: new JomqlInputFieldType({ required: true, type: Scalars.string }),
+        },
+      }),
+    }),
     resolver(input) {
+      console.log(input.args);
       return ["bar"];
+    },
+  }),
+  getFoo: new JomqlRootResolverType({
+    name: "getFoo",
+    type: Scalars.string,
+    allowNull: false,
+    isArray: true,
+    restOptions: {
+      method: "get",
+      route: "/foo/:id",
+      query: lookupSymbol,
+      argsTransformer: (req) => {
+        return !!req.params.id;
+      },
+    },
+    args: new JomqlInputFieldType({
+      required: false,
+      type: Scalars.boolean,
+    }),
+    resolver(input) {
+      console.log(input.args);
+      return ["foo"];
     },
   }),
 };
