@@ -35,3 +35,7 @@ POST http://localhost:8080/jomql
   }
 }
 ```
+
+## Credits
+
+The data model for this repository was copied from https://github.com/arcticmatt/graphql_server_base
