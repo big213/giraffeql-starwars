@@ -1,17 +1,14 @@
 import express from "express";
 import path from "path";
 import { initializeJomql } from "jomql";
+import { jomqlOptions } from "./config";
 import "./schema";
 
 const app = express();
 app.use(express.json());
 const port = 8080;
 
-initializeJomql(app, {
-  debug: true,
-  lookupValue: true,
-  jomqlPath: "/jomql",
-});
+initializeJomql(app, jomqlOptions);
 
 // define a route handler for the default home page
 app.get("/", (req, res) => {

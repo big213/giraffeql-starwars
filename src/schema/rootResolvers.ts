@@ -5,7 +5,6 @@ import {
   JomqlRootResolverType,
   JomqlInputFieldType,
   JomqlInputType,
-  inputTypeDefs,
 } from "jomql";
 import getDroid from "../data/getDroid";
 import { droid, human } from "./typeDefs";
@@ -104,7 +103,6 @@ export default {
     restOptions: {
       method: "get",
       route: "/episodes",
-      query: lookupSymbol,
     },
     resolver() {
       return Object.keys(episodeEnum)
@@ -120,7 +118,6 @@ export default {
     restOptions: {
       method: "get",
       route: "/getSum",
-      query: lookupSymbol,
       argsTransformer: (req) => {
         const values = <Array<string>>req.query.values;
         return Array.isArray(values) ? values.map((ele) => Number(ele)) : [];
@@ -145,7 +142,6 @@ export default {
     restOptions: {
       method: "get",
       route: "/bar/:id",
-      query: lookupSymbol,
     },
     args: new JomqlInputFieldType({
       required: false,
@@ -169,7 +165,6 @@ export default {
     restOptions: {
       method: "get",
       route: "/foo/:id",
-      query: lookupSymbol,
       argsTransformer: (req) => {
         return !!req.params.id;
       },
