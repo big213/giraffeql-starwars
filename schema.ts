@@ -1,4 +1,4 @@
-// Query builder
+// Query builder (Typescript version >= 4.1.3 required)
 const queryResult = executeJomql({
   // Start typing here to get hints
 });
@@ -37,9 +37,9 @@ type Queryize<T> = T extends Field<infer Type, infer Args>
     ? never
     : Type extends Primitive
     ? Args extends undefined // Args is undefined
-      ? true
+      ? LookupValue
       : Args extends [infer Arg]
-      ? true | { __args: Arg } // Args is a tuple
+      ? LookupValue | { __args: Arg } // Args is a tuple
       : { __args: Args }
     : Type extends (infer U)[]
     ? Queryize<Field<U, Args>>
@@ -51,6 +51,8 @@ type Queryize<T> = T extends Field<infer Type, infer Args>
       }
     : { [P in keyof Type]?: Queryize<Type[P]> } & { __args: Args }
   : never;
+
+type LookupValue = true;
 
 /**All Scalar values*/ export type Scalars = {
   /**String value*/ string: string;
@@ -67,6 +69,7 @@ type Queryize<T> = T extends Field<infer Type, infer Args>
   getDroid: { id: Scalars["string"] };
   getHuman: { id: Scalars["string"] };
   getHeroByEpisode: { episode: Scalars["episode"] };
+  getBar: { id: Scalars["string"] };
 };
 /**A droid*/ export type Droid = {
   /**The ID of the droid*/ id: { Type: Scalars["string"]; Args: undefined };
@@ -91,5 +94,6 @@ type Queryize<T> = T extends Field<infer Type, infer Args>
   getHeroByEpisode: { Type: Droid; Args: InputType["getHeroByEpisode"] };
   getEpisodes: { Type: Scalars["episode"][]; Args: undefined };
   getSum: { Type: Scalars["number"]; Args: Scalars["number"][] };
-  getBar: { Type: Scalars["string"][]; Args: undefined };
+  getBar: { Type: Scalars["string"][]; Args: [InputType["getBar"]] };
+  getFoo: { Type: Scalars["string"][]; Args: [Scalars["boolean"]] };
 };
